@@ -18,20 +18,16 @@ from selenium.webdriver.support import expected_conditions as EC
 
 @app.route('/')
 def fill_cgat_form(case_type, case_number, case_year):
-    # Replace 'path/to/chromedriver' with the actual path to your ChromeDriver executable
     driver = webdriver.Chrome()
 
-    # Open the website
     driver.get('https://cgat.gov.in/#/lucknow/case-status')
 
     try:
-        # Wait for the form elements to load
         wait = WebDriverWait(driver, 10)
         wait.until(EC.presence_of_element_located((By.ID, 'caseTypeId')))
         wait.until(EC.presence_of_element_located((By.ID, 'caseNo')))
         wait.until(EC.presence_of_element_located((By.ID, 'caseYear')))
         
-        # Fill the form fields
         type_input = driver.find_element(By.ID, 'caseTypeId')
         type_input.send_keys('Original Application')
         time.sleep(2)
@@ -44,22 +40,18 @@ def fill_cgat_form(case_type, case_number, case_year):
         year_input.send_keys('2019')
         
         time.sleep(2)
-        # Submit the form (assuming there's a submit button, replace with the correct selector if needed)
         submit_button = driver.find_element(By.CLASS_NAME, 'search')
         submit_button.click()
 
         
         time.sleep(2)
-        # Wait for the modal to appear (modify the locator based on the actual modal element)
         wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'modal-body')))
         time.sleep(2)
-        # Find the modal table and extract the data
         modal_table = driver.find_element(By.CLASS_NAME, 'table')
         rows = modal_table.find_elements(By.TAG_NAME, 'tr')
 
         modal_data = {}
         for row in rows:
-            # Extract data from each row
             columns = row.find_elements(By.TAG_NAME, 'td')
             if len(columns) == 7:
                 applicant_vs_respondent = columns[0].text
